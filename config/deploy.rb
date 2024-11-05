@@ -1,7 +1,7 @@
 require 'mina/rails'
 require 'mina/git'
-require 'mina/rbenv' # Use rbenv instead of rvm
-require 'securerandom' # Add this line to require the SecureRandom library
+require 'mina/rbenv'
+require 'securerandom'
 
 # Basic settings:
 set :application_name, 'rails-demo'
@@ -16,18 +16,16 @@ set :forward_agent, true
 set :shared_files, fetch(:shared_files, []).push('config/database.yml')
 set :shared_dirs, fetch(:shared_dirs, []).push('public/packs', 'node_modules')
 
-
 task :remote_environment do
   ruby_version = File.read('.ruby-version').strip
   raise "Couldn't determine Ruby version: Do you have a file .ruby-version in your project root?" if ruby_version.empty?
 
-  # Add rbenv initialization commands here
+  # Ensure rbenv is available in the Mina environment
   command %[export PATH="$HOME/.rbenv/bin:$PATH"]
   command %[eval "$(rbenv init -)"]
+  command %[rbenv install #{ruby_version} || rbenv local #{ruby_version}]  # Ensure Ruby version is installed
   command %[rbenv local #{ruby_version}]
 end
-
-
 
 # Setup task
 task :setup do
