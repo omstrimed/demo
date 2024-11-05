@@ -13,7 +13,7 @@ set :branch, 'main'
 set :forward_agent, true
 
 # Shared files and directories
-set :shared_files, fetch(:shared_files, []).push('config/database.yml')
+set :shared_files, fetch(:shared_files, []).push('config/database.yml , config/secrets.yml')
 set :shared_dirs, fetch(:shared_dirs, []).push('public/packs', 'node_modules')
 # This task is the environment that is loaded for all remote run commands, such as
 # `mina deploy` or `mina rake`.
