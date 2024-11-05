@@ -15,16 +15,16 @@ set :forward_agent, true
 # Shared files and directories
 set :shared_files, fetch(:shared_files, []).push('config/database.yml')
 set :shared_dirs, fetch(:shared_dirs, []).push('public/packs', 'node_modules')
-
+# This task is the environment that is loaded for all remote run commands, such as
+# `mina deploy` or `mina rake`.
 task :remote_environment do
+  # Load rbenv and set the Ruby version from .ruby-version
   ruby_version = File.read('.ruby-version').strip
   raise "Couldn't determine Ruby version: Do you have a file .ruby-version in your project root?" if ruby_version.empty?
 
-  # Ensure rbenv is available in the Mina environment
-  command %[export PATH="$HOME/.rbenv/bin:$PATH"]
-  command %[eval "$(rbenv init -)"]
-  command %[rbenv install #{ruby_version} || rbenv local #{ruby_version}]  # Ensure Ruby version is installed
-  command %[rbenv local #{ruby_version}]
+  # Use rbenv with the specified Ruby version
+  invoke :'rbenv:load'
+  command "rbenv shell #{ruby_version}"
 end
 
 # Setup task
